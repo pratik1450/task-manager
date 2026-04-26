@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #111;
+      color: white;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+    }
+    .task {
+      background: #222;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+    .done {
+      background: green;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Daily Task Manager</h2>
+
+<input id="task" placeholder="Enter task">
+<button onclick="addTask()">Add</button>
+
+<div id="list"></div>
+
+<script>
+let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+function save() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  render();
+}
+
+function addTask() {
+  let t = document.getElementById("task").value;
+  if (!t) return;
+  tasks.push({ name: t, done: false });
+  save();
+}
+
+function toggle(i) {
+  tasks[i].done = !tasks[i].done;
+  save();
+}
+
+function render() {
+  let html = "";
+  tasks.forEach((t,i) => {
+    html += `<div class="task ${t.done?'done':''}">
+      ${t.name}
+      <button onclick="toggle(${i})">✔</button>
+    </div>`;
+  });
+  document.getElementById("list").innerHTML = html;
+}
+
+render();
+</script>
+
+</body>
+</html>
